@@ -1,0 +1,97 @@
+/* Remove top gap */
+.main-content {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+/* Arrange first two boxes side-by-side */
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+/* Card styling */
+.info-card {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  padding: 20px;
+  flex: 1;
+}
+
+/* Make Experience box span full width */
+.full-width {
+  margin-top: 20px;
+  width: 100%;
+}
+
+/* Minor text spacing and formatting */
+.info-card h3 {
+  color: #0b2e8c;
+  margin-bottom: 10px;
+}
+
+.exp-item, .edu-item {
+  border-top: 1px solid #e0e0e0;
+  margin-top: 8px;
+  padding-top: 8px;
+}
+
+/* Remove space between header and profile section */
+.content {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* Keep profile section tight with header */
+.profile-section {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* Align Personal Info & Education side by side */
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  margin-top: 15px;
+}
+
+/* Info cards */
+.info-card {
+  flex: 1;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+/* Experience full width below */
+.full-width {
+  width: 100%;
+  margin-top: 20px;
+}
+
+/* Table styling for Education & Experience */
+.info-card table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.info-card th, .info-card td {
+  text-align: left;
+  padding: 6px 10px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.info-card th {
+  color: #0b2e8c;
+}
+
+/* Section titles */
+h3 {
+  color: #0b2e8c;
+  margin-bottom: 10px;
+}

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doctor Profile | MediDispense</title>
+
+  <style>
+
+    /* ------------------ GLOBAL BACKGROUND ------------------ */
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background: url("{{ url_for('static', filename='images1/bg_medical.jpg') }}");
+      background-size: 350px;
+      background-repeat: repeat;
+      background-attachment: fixed;
+      color: var(--text-main);
+    }
+
+    /* White overlay to soften background */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.78);
+      z-index: -1;
+    }
+
+    /* ------------------ THEME VARIABLES ------------------ */
+    :root {
+      --primary: #2563eb;
+      --primary-light: #e0edff;
+      --primary-soft: #f3f6ff;
+      --nav-bg: linear-gradient(to right, #2563eb, #1e40af);
+
+      --card-bg: #ffffff;
+      --text-main: #111827;
+      --text-muted: #6b7280;
+      --border: #e5e7eb;
+      --radius: 14px;
+      --shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+      --shadow-strong: 0 12px 38px rgba(37, 99, 235, 0.15);
+    }
+
+    /* ------------------ NAVIGATION ------------------ */
+    .top-nav {
+      width: 100%;
+      background: var(--nav-bg);
+      box-shadow: var(--shadow);
+      padding: 14px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      color: white;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 35px;
+      font-size: 15px;
+    }
+
+    .brand {
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .nav-link {
+      text-decoration: none;
+      color: #e9efff;
+      transition: 0.2s;
+      font-weight: 500;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      color: white;
+      font-weight: 600;
+    }
+
+    .logout {
+      background: #ef4444;
+      color: white;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 14px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: 0.2s;
+      box-shadow: 0 4px 10px rgba(239, 68, 68, 0.35);
+    }
+
+    .logout:hover {
+      background: #dc2626;
+      transform: translateY(-1px);
+    }
+
+    /* ------------------ PAGE CONTENT ------------------ */
+    .page {
+      padding: 40px 7%;
+    }
+
+    .section-card {
+      background: var(--card-bg);
+      padding: 24px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1.5px solid var(--border);
+      margin-bottom: 28px;
+    }
+
+    .section-title-bar {
+      background: var(--primary-soft);
+      padding: 10px 14px;
+      border-radius: 10px;
+      margin-bottom: 16px;
+      border-left: 5px solid var(--primary);
+      font-weight: 700;
+      font-size: 17px;
+      color: #1e3a8a;
+    }
+
+    /* PROFILE HEADER */
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+    }
+
+    .avatar {
+      width: 80px;
+      height: 80px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      font-size: 34px;
+      font-weight: 600;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: var(--shadow-strong);
+    }
+
+    h2 {
+      margin: 0 0 12px 0;
+      font-size: 24px;
+      font-weight: 700;
+      color: #1e3a8a;
+    }
+
+    .muted {
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    /* TABLES */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      font-size: 14px;
+    }
+
+    th {
+      background: var(--primary-light);
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+      font-weight: 600;
+      color: #1e3a8a;
+      text-transform: uppercase;
+    }
+
+    td {
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tr:hover {
+      background: #f9fbff;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="top-nav">
+  <div class="nav-left">
+    <div class="brand">MediDispense</div>
+
+    <a href="{{ url_for('doctor_profile', doctor_id=doctor.doctor_id) }}"
+       class="nav-link {% if request.endpoint=='doctor_profile' %}active{% endif %}">
+       Profile
+    </a>
+
+    <a href="{{ url_for('doctor_dashboard', doctor_id=doctor.doctor_id) }}"
+       class="nav-link {% if request.endpoint=='doctor_dashboard' %}active{% endif %}">
+       Dashboard
+    </a>
+
+    
+
+    <a href="{{ url_for('doctor_history', doctor_id=doctor.doctor_id) }}"
+       class="nav-link {% if request.endpoint=='doctor_history' %}active{% endif %}">
+       History
+    </a>
+  </div>
+
+  <a class="logout" href="{{ url_for('logout') }}">Log Out</a>
+</div>
+
+
+
+<!-- PAGE CONTENT -->
+<div class="page">
+
+  <!-- PROFILE HEADER -->
+  <div class="section-card">
+    <div class="profile-header">
+      <div class="avatar">{{ doctor.name[0] }}</div>
+
+      <div>
+        <h2>{{ doctor.name }}</h2>
+        <div class="muted">{{ doctor.specialty }}</div>
+        <div class="muted">Email: {{ doctor.email }}</div>
+        <div class="muted">Phone: {{ doctor.phone }}</div>
+        <div class="muted">Doctor ID: <b>{{ doctor.doctor_id }}</b></div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- QUALIFICATIONS -->
+  <div class="section-card">
+    <div class="section-title-bar">Qualifications</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Year</th>
+          <th>Degree</th>
+          <th>Institution</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for q in doctor.qualifications %}
+        <tr>
+          <td>{{ q.year }}</td>
+          <td>{{ q.degree }}</td>
+          <td>{{ q.institution }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+
+  <!-- PUBLICATIONS -->
+  <div class="section-card">
+    <div class="section-title-bar">Publications</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Journal</th>
+          <th>Year</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in doctor.publications %}
+        <tr>
+          <td>{{ p.title }}</td>
+          <td>{{ p.journal }}</td>
+          <td>{{ p.year }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+
+  <!-- WORK EXPERIENCE -->
+  <div class="section-card">
+    <div class="section-title-bar">Work Experience</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Year</th>
+          <th>Position</th>
+          <th>Department</th>
+          <th>Hospital</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for exp in doctor.past_experience %}
+        <tr>
+          <td>{{ exp.year }}</td>
+          <td>{{ exp.position }}</td>
+          <td>{{ exp.department }}</td>
+          <td>{{ exp.hospital }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+
+</body>
+</html>

@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nurse Dashboard | MediDispense</title>
+
+
+<style>
+
+  /* 🔔 Center Modal Popup */
+/* ------------------ CENTER MODAL POPUP ------------------ */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.45);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999;
+}
+
+.modal-box {
+    background: white;
+    width: 350px;
+    padding: 22px;
+    border-radius: 16px;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.25);
+    text-align: center;
+    font-family: "Poppins", sans-serif;
+}
+
+.modal-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1e3a8a;
+    margin-bottom: 12px;
+}
+
+.modal-message {
+    font-size: 15px;
+    color: #374151;
+    margin-bottom: 20px;
+}
+
+.modal-btn {
+    background: #2563eb;
+    color: white;
+    padding: 10px 24px;
+    border-radius: 8px;
+    border: none;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.modal-btn:hover {
+    background: #1e40af;
+}
+
+
+  :root {
+    --primary: #2563eb;
+    --primary-light: #e0edff;
+    --primary-soft: #f3f6ff;
+    --nav-bg: linear-gradient(to right, #2563eb, #1e40af);
+    --text-main: #111827;
+    --text-muted: #6b7280;
+    --border: #e5e7eb;
+    --radius: 14px;
+    --shadow: 0 8px 24px rgba(0,0,0,0.06);
+  }
+  body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.75); /* 75% white overlay */
+  z-index: -1;
+}
+
+
+
+
+  body {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    background: url("{{ url_for('static', filename='images1/bg_medical.jpg') }}");
+    background-size: 350px;
+    background-repeat: repeat;
+    background-attachment: fixed;
+    color: var(--text-main);
+  }
+
+
+  /* Top Navbar */
+  .top-nav {
+    width: 100%;
+    background: var(--nav-bg);
+    padding: 14px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: var(--shadow);
+  }
+
+
+  .nav-left {
+    display: flex;
+    align-items: center;
+    gap: 35px;
+    font-size: 15px;
+    flex-wrap: nowrap;
+  }
+
+
+  .brand {
+    font-size: 22px;
+    font-weight: 700;
+  }
+
+
+  .nav-link {
+    text-decoration: none;
+    color: #e9efff;
+    font-weight: 500;
+    transition: 0.2s;
+  }
+
+
+  .nav-link:hover, .nav-link.active {
+    color: #ffffff;
+    font-weight: 600;
+  }
+
+
+  .logout {
+    background: #ef4444;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.25s ease;
+    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.35);
+  }
+  .logout:hover {
+    background: #dc2626;
+    transform: translateY(-1px);
+  }
+
+
+  /* Page layout */
+  .page {
+    padding: 40px 6%;
+  }
+
+
+  .section-card {
+    background: white;
+    padding: 28px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 32px;
+    border: 1px solid var(--border);
+  }
+
+
+  .section-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #1e3a8a;
+    margin-bottom: 20px;
+  }
+
+
+  /* Table Styling */
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+  }
+
+
+  thead th {
+    background: var(--primary-light);
+    padding: 14px;
+    text-align: left;
+    font-size: 14px;
+    color: #1e3a8a;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+
+  tbody tr {
+    background: white;
+    box-shadow: var(--shadow);
+    border-radius: 8px;
+  }
+
+
+  tbody td {
+    padding: 16px 14px;
+    font-size: 14px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+
+
+  /* Status badges */
+  .status-given {
+    background: #22c55e;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+
+
+  .status-due {
+    background: #facc15;
+    color: #000;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+
+
+  /* Buttons */
+  .mark-btn {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: 0.25s ease;
+  }
+  .mark-btn:hover {
+    background: #1e40af;
+  }
+
+
+  .mark-btn.mark-due {
+    background: #ef4444;
+  }
+  .mark-btn.mark-due:hover {
+    background: #b91c1c;
+  }
+
+
+ 
+  /* Timestamp */
+  .timestamp {
+    text-align: right;
+    margin-top: 10px;
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+
+  
+
+
+ 
+</style>
+</head>
+
+
+<body>
+
+
+<!-- Top Navigation -->
+<div class="top-nav">
+  <div class="nav-left">
+    <div class="brand">MediDispense</div>
+
+
+    <a href="{{ url_for('nurse_profile', nurse_id=nurse.nurse_id) }}"
+   class="nav-link {% if request.endpoint=='nurse_profile' %}active{% endif %}">
+    Profile
+</a>
+
+
+<a href="{{ url_for('nurse_dashboard') }}"
+   class="nav-link {% if request.endpoint=='nurse_dashboard' %}active{% endif %}">
+    Dashboard
+</a>
+
+
+<a href="{{ url_for('nurse_patients') }}"
+   class="nav-link {% if request.endpoint=='nurse_patients' %}active{% endif %}">
+    My Patients
+</a>
+<a href="{{ url_for('nurse_history') }}"
+   class="nav-link {% if request.endpoint=='nurse_history' %}active{% endif %}">
+    History
+</a>
+
+
+
+
+  </div>
+
+
+  <a class="logout" href="{{ url_for('logout') }}">Log Out</a>
+</div>
+
+
+<!-- Page Content -->
+<div class="page">
+
+
+  <div class="section-card">
+    <div class="section-title">Assigned Patients</div>
+
+
+    <table>
+      <thead>
+        <tr>
+          <th>Patient ID</th>
+          <th>Patient Name</th>
+          <th>Room</th>
+          <th>Diagnosis</th>
+          <th>Doctor</th>
+          <th>Next Medicine Time</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+
+      <tbody>
+  {% for patient in assigned_patients %}
+  <tr>
+    <td>{{ patient.patient_id }}</td>
+    <td>{{ patient.name }}</td>
+    <td>{{ patient.room }}</td>
+    <td>{{ patient.diagnosis }}</td>
+    <td>{{ patient.doctor }}</td>
+
+
+    <!-- 👇 IMPORTANT: class="time-cell" -->
+    <td class="time-cell">
+      {{ patient.next_medicine_time }}
+    </td>
+
+
+    <td>
+      {% if patient.status == "Given" %}
+        <span class="status-given">Given</span>
+      {% else %}
+        <span class="status-due">Due</span>
+      {% endif %}
+    </td>
+
+
+    <td>
+      <button
+        class="mark-btn {% if patient.status == 'Given' %}mark-due{% endif %}"
+        onclick="markGiven('{{ patient.patient_id }}', this)">
+        {% if patient.status == 'Given' %}Mark Due{% else %}Mark Given{% endif %}
+      </button>
+    </td>
+  </tr>
+  {% endfor %}
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+const socket = io();
+
+/* ------------------ CENTER MODAL POPUP FUNCTION ------------------ */
+function showModal(title, message, autoRemoveAt = null) {
+    const overlay = document.createElement("div");
+    overlay.className = "modal-overlay";
+
+    overlay.innerHTML = `
+        <div class="modal-box">
+            <div class="modal-title">${title}</div>
+            <div class="modal-message">${message}</div>
+            <button class="modal-btn">OK</button>
+        </div>
+    `;
+
+    // Remove manually when nurse clicks OK
+    overlay.querySelector(".modal-btn").onclick = () => overlay.remove();
+
+    // Auto-remove AFTER medicine time passes
+    if (autoRemoveAt) {
+        const checkInterval = setInterval(() => {
+            const now = new Date();
+            if (now >= autoRemoveAt) {
+                overlay.remove();
+                clearInterval(checkInterval);
+            }
+        }, 2000);
+    }
+
+    document.body.appendChild(overlay);
+}
+
+
+/* ------------------ ALERT FOR EXACT MEDICINE TIME ------------------ */
+socket.on("medicine_alert", data => {
+
+    const msg = `
+        Patient ID: ${data.patient_id}<br>
+        Patient Name: ${data.patient_name}<br>
+        Room: ${data.room}<br>
+        Time: ${data.time}
+    `;
+
+    // Parse the medicine time so we can auto-remove popup after time passes
+    const removeTime = parseTimeFlexible(data.time);
+
+    showModal("⏰ Medicine Time Alert", msg, removeTime);
+
+    const row = [...document.querySelectorAll("tr")]
+        .find(r => r.innerText.includes(data.patient_id));
+
+    if (row) {
+        row.style.background = "#fff3cd";
+        setTimeout(() => row.style.background = "", 10000);
+    }
+});
+</script>
+
+
+<script>
+/* ------------------ 1-MINUTE BEFORE ALERT ------------------ */
+setInterval(() => {
+    const rows = document.querySelectorAll("tbody tr");
+
+    rows.forEach(row => {
+        const patientId = row.children[0].innerText.trim();
+        const timeCell = row.querySelector(".time-cell");
+        if (!timeCell) return;
+
+        let nextTimeStr = timeCell.innerText.trim();
+        nextTimeStr = nextTimeStr.replace(/\s+/g, " ").toUpperCase();
+
+        const now = new Date();
+        const nextDose = parseTimeFlexible(nextTimeStr);
+
+        if (nextDose < now) {
+            nextDose.setDate(nextDose.getDate() + 1);
+        }
+
+        const diffMs = nextDose - now;
+        const diffSeconds = Math.floor(diffMs / 1000);
+
+        // Trigger alert between 1–60 seconds before the dose
+        if (diffSeconds <= 60 && diffSeconds > 0 && !row.dataset.alerted) {
+
+            showModal(
+                "⏳ Upcoming Dose",
+                `Next dose in 1 minute for Patient ${patientId}`,
+                nextDose // auto-remove when time passes
+            );
+
+            row.style.background = "#fff3cd";
+            row.dataset.alerted = "true";
+        }
+    });
+}, 5000);
+
+
+/* ------------------ TIME PARSER FOR "01:32 AM" ------------------ */
+function parseTimeFlexible(timeStr) {
+    const now = new Date();
+
+    const [time, modifier] = timeStr.split(" ");
+    let [hours, minutes] = time.split(":").map(Number);
+
+    if (modifier === "PM" && hours !== 12) hours += 12;
+    if (modifier === "AM" && hours === 12) hours = 0;
+
+    return new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+        hours,
+        minutes,
+        0,
+        0
+    );
+}
+</script>
+
+
+
+
+
+</tbody>
+
+
+
+
+
+
+    </table>
+
+
+    <div class="timestamp">
+  Last updated:
+  {% if last_updated %}
+      {{ last_updated }}
+  {% else %}
+      No recent updates
+  {% endif %}
+</div>
+
+
+
+
+  </div>
+</div>
+<script>
+async function markGiven(patientId, button) {
+  try {
+    const row = button.closest("tr");
+    const statusSpan = row.querySelector("span");
+    const timeCell = row.querySelector(".time-cell");
+    const lastUpdatedDiv = document.getElementById("last-updated");
+
+
+    const confirmed = confirm(
+      `Are you sure you want to toggle the status for ${patientId}?`
+    );
+    if (!confirmed) return;
+
+
+    const response = await fetch("/update_medicine_status", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ patient_id: patientId })
+    });
+
+
+    const result = await response.json();
+
+
+    // 🔒 LOCKED (after 2 minutes)
+    if (result.locked) {
+      alert("This dose is locked.\nNext medicine time: " + (result.new_time || ""));
+      if (timeCell && result.new_time) {
+        timeCell.textContent = result.new_time;
+      }
+      return;
+    }
+
+
+    // ✅ Normal toggle
+    if (result.success) {
+      if (result.new_status === "Given") {
+        statusSpan.textContent = "Given";
+        statusSpan.className = "status-given";
+        button.textContent = "Mark Due";
+        button.classList.add("mark-due");
+      } else {
+        statusSpan.textContent = "Due";
+        statusSpan.className = "status-due";
+        button.textContent = "Mark Given";
+        button.classList.remove("mark-due");
+      }
+
+
+      if (timeCell && result.new_time) {
+        timeCell.textContent = result.new_time;
+      }
+
+
+      if (lastUpdatedDiv && result.last_updated) {
+        lastUpdatedDiv.textContent = "Last updated: " + result.last_updated;
+      }
+    } else if (!result.success && result.message) {
+      alert(result.message);
+    }
+
+
+  } catch (err) {
+    console.error(err);
+    alert("An error occurred while updating.");
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+</body>
+</html>

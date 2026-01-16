@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Patients | MediDispense</title>
+
+<style>
+
+/* --- Sidebar (same as nurse) --- */
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: -420px;
+    width: 360px;
+    height: 100%;
+    background: #ffffff;
+    box-shadow: -4px 0 18px rgba(0,0,0,0.12);
+    padding: 22px 24px;
+    transition: 0.35s ease;
+    overflow-y: auto;
+    z-index: 2000;
+}
+.sidebar.open { right: 0; }
+
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+.sidebar-header h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1e3a8a;
+}
+.close-btn {
+    background: transparent;
+    border: none;
+    font-size: 26px;
+    font-weight: bold;
+    color: #6b7280;
+    cursor: pointer;
+}
+
+.sidebar-section {
+    margin-bottom: 18px;
+}
+.sidebar-section label {
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: #6b7280;
+}
+.sidebar-section .value {
+    margin-top: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.chip {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 6px;
+    color: white;
+}
+.chip.due { background:#facc15; color:black; }
+.chip.given { background:#22c55e; }
+
+/* View Full Profile button */
+.view-full-btn {
+    width: 100%;
+    padding: 10px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-top: 20px;
+}
+.view-full-btn:hover { background:#1e40af; }
+
+
+/* --- Global theme (same as nurse) --- */
+:root {
+  --primary: #2563eb;
+  --primary-light: #e0edff;
+  --primary-soft: #f3f6ff;
+  --nav-bg: linear-gradient(to right, #2563eb, #1e40af);
+  --text-main: #111827;
+  --text-muted: #6b7280;
+  --border: #e5e7eb;
+  --radius: 14px;
+  --shadow: 0 8px 24px rgba(0,0,0,0.06);
+}
+
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background: url("{{ url_for('static', filename='images1/bg_medical.jpg') }}");
+  background-size: 350px;
+  background-repeat: repeat;
+  background-attachment: fixed;
+  overflow-x: hidden;
+}
+body::before {
+  content:"";
+  position:fixed;
+  inset:0;
+  background:rgba(255,255,255,0.75);
+  z-index:-1;
+}
+
+/* Navbar */
+.top-nav {
+  background: var(--nav-bg);
+  padding: 14px 24px;
+  color: white;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  position:sticky;
+  top:0;
+  z-index:1000;
+}
+.nav-left {
+  display:flex;
+  align-items:center;
+  gap:35px;
+}
+.brand {
+  font-size:22px;
+  font-weight:700;
+}
+.nav-link {
+  text-decoration:none;
+  color:#e9efff;
+  font-weight:500;
+}
+.nav-link.active,
+.nav-link:hover {
+  color:white;
+  font-weight:600;
+}
+
+.logout {
+  background:#ef4444;
+  color:white;
+  padding:6px 14px;
+  border-radius:6px;
+  text-decoration:none;
+  font-weight:600;
+}
+
+/* layout */
+.page { padding:40px 6%; }
+
+/* Card */
+.section-card {
+  background:white;
+  padding:26px;
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  border:1px solid var(--border);
+  margin-bottom:32px;
+}
+
+.section-title {
+  font-size:26px;
+  font-weight:700;
+  color:#1e3a8a;
+  margin-bottom:10px;
+}
+.section-subtitle {
+  font-size:14px;
+  color:var(--text-muted);
+  margin-bottom:20px;
+}
+
+/* TABLE */
+table {
+  width:100%;
+  border-collapse:separate;
+  border-spacing:0 10px;
+}
+thead th {
+  background:var(--primary-light);
+  padding:14px 12px;
+  text-align:left;
+  color:#1e3a8a;
+  font-size:13px;
+  font-weight:600;
+}
+tbody tr {
+  background:white;
+  box-shadow:var(--shadow);
+  border-radius:10px;
+  cursor:pointer;
+  transition:0.15s ease;
+}
+tbody tr:hover {
+  transform:translateY(-1px);
+  box-shadow:0 10px 26px rgba(15,23,42,0.12);
+}
+tbody td {
+  padding:14px 12px;
+  font-size:14px;
+  border-bottom:1px solid #f1f5f9;
+}
+
+.view-btn {
+  background:#2563eb;
+  color:white;
+  padding:7px 14px;
+  border:none;
+  border-radius:8px;
+  font-weight:600;
+  cursor:pointer;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="top-nav">
+  <div class="nav-left">
+    <div class="brand">MediDispense</div>
+
+    <a href="{{ url_for('doctor_profile', doctor_id=doctor.doctor_id) }}"
+       class="nav-link {% if request.endpoint=='doctor_profile' %}active{% endif %}">
+       Profile
+    </a>
+
+    <a href="{{ url_for('doctor_dashboard', doctor_id=doctor.doctor_id) }}"
+       class="nav-link {% if request.endpoint=='doctor_dashboard' %}active{% endif %}">
+       Dashboard
+    </a>
+
+    
+    <a href="{{ url_for('doctor_history', doctor_id=doctor.doctor_id) }}"
+       class="nav-link {% if request.endpoint=='doctor_history' %}active{% endif %}">
+       History
+    </a>
+  </div>
+
+  <a class="logout" href="{{ url_for('logout') }}">Log Out</a>
+</div>
+
+
+
+
+<!-- PAGE -->
+<div class="page">
+  <div class="section-card">
+    <div class="section-title">My Patients</div>
+    <div class="section-subtitle">Click a row or “View Details” to preview the patient.</div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Patient ID</th>
+          <th>Patient Name</th>
+          <th>Room</th>
+          <th>Diagnosis</th>
+          <th>Details</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for p in assigned_patients %}
+        <tr class="patient-row"
+            data-id="{{ p.patient_id }}"
+            data-name="{{ p.name }}"
+            data-room="{{ p.room }}"
+            data-diagnosis="{{ p.diagnosis }}"
+            data-next="{{ p.next_medicine_time }}"
+            data-status="{{ p.status }}">
+
+          <td>{{ p.patient_id }}</td>
+          <td><strong>{{ p.name }}</strong></td>
+          <td>{{ p.room }}</td>
+          <td>{{ p.diagnosis }}</td>
+          <td><button class="view-btn">View Details</button></td>
+
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+
+
+<!-- ===== PATIENT SIDEBAR ===== -->
+<div id="patient-details" class="sidebar">
+  <div class="sidebar-header">
+    <h2>Patient Details</h2>
+    <button class="close-btn" onclick="closeSidebar()">×</button>
+  </div>
+
+  <div class="sidebar-section">
+      <label>Patient ID</label>
+      <div class="value" id="sb-id">---</div>
+  </div>
+
+  <div class="sidebar-section">
+      <label>Name</label>
+      <div class="value" id="sb-name">---</div>
+  </div>
+
+  <div class="sidebar-section">
+      <label>Room</label>
+      <div class="value" id="sb-room">---</div>
+  </div>
+
+  <div class="sidebar-section">
+      <label>Diagnosis</label>
+      <div class="value" id="sb-diagnosis">---</div>
+  </div>
+
+  <div class="sidebar-section">
+      <label>Status & Next Medicine</label>
+      <div class="chip" id="sb-status">---</div>
+      <div class="value" id="sb-next">---</div>
+  </div>
+
+  <button class="view-full-btn" onclick="openFullProfile()">View Full Profile →</button>
+</div>
+
+
+
+<script>
+function openSidebarFromRow(row) {
+    document.getElementById("sb-id").textContent = row.dataset.id;
+    document.getElementById("sb-name").textContent = row.dataset.name;
+    document.getElementById("sb-room").textContent = row.dataset.room;
+    document.getElementById("sb-diagnosis").textContent = row.dataset.diagnosis;
+
+    const status = row.dataset.status;
+    const chip = document.getElementById("sb-status");
+    chip.textContent = status;
+    chip.className = "chip " + (status === "Given" ? "given" : "due");
+
+    const next = row.dataset.next;
+    document.getElementById("sb-next").textContent = next ? ("Next dose at " + next) : "No dose scheduled";
+
+    document.getElementById("patient-details").classList.add("open");
+}
+
+function closeSidebar() {
+    document.getElementById("patient-details").classList.remove("open");
+}
+
+document.querySelectorAll(".patient-row").forEach(row => {
+    row.addEventListener("click", () => openSidebarFromRow(row));
+});
+
+function openFullProfile() {
+    const pid = document.getElementById("sb-id").textContent.trim();
+    if (pid) {
+        window.location.href = "/patient/" + pid;
+    }
+}
+</script>
+
+</body>
+</html>

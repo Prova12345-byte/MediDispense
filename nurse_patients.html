@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Patients | MediDispense</title>
+
+  <style>
+
+    /* Sidebar container */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        right: -420px;
+        width: 360px;
+        height: 100%;
+        background: #ffffff;
+        box-shadow: -4px 0 18px rgba(0,0,0,0.12);
+        padding: 22px 24px;
+        transition: 0.35s ease;
+        overflow-y: auto;
+        z-index: 2000;
+        border-left: 1px solid #e5e7eb;
+    }
+
+    .sidebar.open {
+        right: 0;
+    }
+
+    .sidebar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+    }
+
+    .sidebar-header h2 {
+        font-size: 20px;
+        font-weight: 700;
+        color: #1e3a8a;
+        margin: 0;
+    }
+
+    .close-btn {
+        background: transparent;
+        border: none;
+        font-size: 26px;
+        font-weight: bold;
+        color: #6b7280;
+        cursor: pointer;
+    }
+
+    .sidebar-section {
+        margin-bottom: 18px;
+    }
+
+    .sidebar-section label {
+        font-size: 12px;
+        text-transform: uppercase;
+        font-weight: 600;
+        color: #6b7280;
+    }
+
+    .sidebar-section .value {
+        margin-top: 6px;
+        font-size: 15px;
+        font-weight: 600;
+        color: #1f2937;
+    }
+
+    .chip {
+        display: inline-block;
+        padding: 6px 14px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 600;
+        margin-top: 6px;
+        color: white;
+    }
+
+    .chip.due {
+        background: #facc15;
+        color: black;
+    }
+
+    .chip.given {
+        background: #22c55e;
+    }
+
+    .view-full-btn {
+        width: 100%;
+        padding: 10px;
+        background: #2563eb;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        margin-top: 20px;
+    }
+    .view-full-btn:hover {
+        background: #1e40af;
+    }
+
+    :root {
+      --primary: #2563eb;
+      --primary-light: #e0edff;
+      --primary-soft: #f3f6ff;
+      --nav-bg: linear-gradient(to right, #2563eb, #1e40af);
+      --text-main: #111827;
+      --text-muted: #6b7280;
+      --border: #e5e7eb;
+      --radius: 14px;
+      --shadow: 0 8px 24px rgba(0,0,0,0.06);
+    }
+
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background: url("{{ url_for('static', filename='images1/bg_medical.jpg') }}");
+      background-size: 350px;
+      background-repeat: repeat;
+      background-attachment: fixed;
+      color: var(--text-main);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.75);
+      z-index: -1;
+    }
+
+    .top-nav {
+      width: 100%;
+      background: var(--nav-bg);
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: var(--shadow);
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 35px;
+      font-size: 15px;
+    }
+
+    .brand {
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .nav-link {
+      text-decoration: none;
+      color: #e9efff;
+      font-weight: 500;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .logout {
+      background: #ef4444;
+      color: white;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 14px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .logout:hover {
+      background: #dc2626;
+    }
+
+    .page {
+      padding: 40px 6%;
+    }
+
+    .section-card {
+      background: white;
+      padding: 26px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 32px;
+      border: 1px solid var(--border);
+    }
+
+    .section-title {
+      font-size: 26px;
+      font-weight: 700;
+      color: #1e3a8a;
+      margin-bottom: 10px;
+    }
+
+    .section-subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 10px;
+    }
+
+    thead th {
+      background: var(--primary-light);
+      padding: 14px 12px;
+      text-align: left;
+      font-size: 13px;
+      color: #1e3a8a;
+      font-weight: 600;
+    }
+
+    tbody tr {
+      background: #ffffff;
+      box-shadow: var(--shadow);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.15s ease;
+    }
+
+    tbody tr:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.12);
+    }
+
+    tbody td {
+      padding: 14px 12px;
+      font-size: 14px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .view-btn {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<!-- TOP NAV -->
+<div class="top-nav">
+  <div class="nav-left">
+    <div class="brand">MediDispense</div>
+
+    <a href="{{ url_for('nurse_profile', nurse_id=nurse.nurse_id) }}"
+       class="nav-link {% if request.endpoint=='nurse_profile' %}active{% endif %}">
+      Profile
+    </a>
+
+    <a href="{{ url_for('nurse_dashboard') }}"
+       class="nav-link {% if request.endpoint=='nurse_dashboard' %}active{% endif %}">
+      Dashboard
+    </a>
+
+    <a href="{{ url_for('nurse_patients') }}"
+       class="nav-link {% if request.endpoint=='nurse_patients' %}active{% endif %}">
+      My Patients
+    </a>
+
+    <a href="{{ url_for('nurse_history') }}"
+       class="nav-link {% if request.endpoint=='nurse_history' %}active{% endif %}">
+      History
+    </a>
+
+  </div>
+
+  <a class="logout" href="{{ url_for('logout') }}">Log Out</a>
+</div>
+
+
+<!-- PAGE CONTENT -->
+<div class="page">
+  <div class="section-card">
+    <div class="section-title">My Patients</div>
+    <div class="section-subtitle">
+      Overview of patients assigned to you. Click a row or “View Details” to see full information.
+    </div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Patient ID</th>
+      <th>Patient Name</th>
+      <th>Room</th>
+      <th>Doctor</th>
+      <th>Details</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for patient in assigned_patients %}
+    <tr class="patient-row"
+        data-id="{{ patient.patient_id }}"
+        data-name="{{ patient.name }}"
+        data-gender="{{ patient.gender }}"
+        data-room="{{ patient.room }}"
+        data-diagnosis="{{ patient.diagnosis }}"
+        data-doctor="{{ patient.doctor }}"
+        data-next="{{ patient.next_medicine_time }}"
+        data-status="{{ patient.status }}">
+
+      <td>{{ patient.patient_id }}</td>
+      <td><strong>{{ patient.name }}</strong></td>
+      <td>{{ patient.room }}</td>
+      <td>{{ patient.doctor }}</td>
+
+      <td>
+        <button class="view-btn">View Details</button>
+      </td>
+
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+  </div>
+</div>
+
+
+<!-- Patient Details Sidebar -->
+<div id="patient-details" class="sidebar">
+    <div class="sidebar-header">
+        <h2>Patient Details</h2>
+        <button class="close-btn" onclick="closeSidebar()">×</button>
+    </div>
+
+    <div class="sidebar-section">
+        <label>Patient ID</label>
+        <div class="value" id="sb-id">---</div>
+    </div>
+
+    <div class="sidebar-section">
+        <label>Name</label>
+        <div class="value" id="sb-name">---</div>
+    </div>
+
+    <div class="sidebar-section">
+        <label>Room</label>
+        <div class="value" id="sb-room">---</div>
+    </div>
+
+    <div class="sidebar-section">
+        <label>Diagnosis</label>
+        <div class="value" id="sb-diagnosis">---</div>
+    </div>
+
+    <div class="sidebar-section">
+        <label>Status & Next Medicine</label>
+        <div class="chip" id="sb-status">---</div>
+        <div class="value small" id="sb-next">---</div>
+    </div>
+
+    <div class="sidebar-section">
+        <label>Doctor</label>
+        <div class="value" id="sb-doctor">---</div>
+    </div>
+
+    <button class="view-full-btn" onclick="openFullProfile()">
+        View Full Profile →
+    </button>
+</div>
+
+
+<!-- SIDEBAR LOGIC -->
+<script>
+function openSidebarFromRow(row) {
+
+    document.getElementById("sb-id").textContent = row.dataset.id;
+    document.getElementById("sb-name").textContent = row.dataset.name;
+    document.getElementById("sb-room").textContent = row.dataset.room;
+    document.getElementById("sb-diagnosis").textContent = row.dataset.diagnosis;
+    document.getElementById("sb-doctor").textContent = row.dataset.doctor;
+
+    const status = row.dataset.status;
+    const chip = document.getElementById("sb-status");
+    chip.textContent = status;
+    chip.className = "chip " + (status === "Given" ? "given" : "due");
+
+    const next = row.dataset.next;
+    document.getElementById("sb-next").textContent =
+        next ? ("Next dose at " + next) : "Next dose not available";
+
+    document.getElementById("patient-details").classList.add("open");
+}
+
+function closeSidebar() {
+    document.getElementById("patient-details").classList.remove("open");
+}
+
+document.querySelectorAll(".patient-row").forEach(row => {
+    row.addEventListener("click", () => openSidebarFromRow(row));
+});
+</script>
+
+
+<!-- OPEN FULL PROFILE -->
+<script>
+function openFullProfile() {
+    const pid = document.getElementById("sb-id").textContent.trim();
+    if (!pid) {
+        alert("Patient ID missing");
+        return;
+    }
+    window.location.href = "/patient/" + pid;
+}
+</script>
+
+
+</body>
+</html>

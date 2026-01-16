@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Doctor Dashboard | MediDispense</title>
+
+<style>
+  :root {
+    --primary: #2563eb;
+    --primary-light: #e0edff;
+    --primary-soft: #f3f6ff;
+    --nav-bg: linear-gradient(to right, #2563eb, #1e40af);
+    --text-main: #111827;
+    --text-muted: #6b7280;
+    --border: #e5e7eb;
+    --radius: 14px;
+    --shadow: 0 8px 24px rgba(0,0,0,0.06);
+  }
+
+  body {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    background: url("{{ url_for('static', filename='images1/bg_medical.jpg') }}");
+    background-size: 350px;
+    background-repeat: repeat;
+    background-attachment: fixed;
+    color: var(--text-main);
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.75);
+    z-index: -1;
+  }
+
+  /* NAVBAR */
+  .top-nav {
+    width: 100%;
+    background: var(--nav-bg);
+    padding: 14px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: var(--shadow);
+  }
+
+  .nav-left {
+    display: flex;
+    align-items: center;
+    gap: 35px;
+    font-size: 15px;
+  }
+
+  .brand {
+    font-size: 22px;
+    font-weight: 700;
+  }
+
+  .nav-link {
+    text-decoration: none;
+    color: #e9efff;
+    font-weight: 500;
+  }
+
+  .nav-link:hover, .nav-link.active {
+    color: #ffffff;
+  }
+
+  .logout {
+    background: #ef4444;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+    color: white;
+    text-decoration: none;
+  }
+
+  /* PAGE */
+  .page {
+    padding: 40px 6%;
+  }
+
+  .section-card {
+    background: white;
+    padding: 28px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 32px;
+    border: 1px solid var(--border);
+  }
+
+  .section-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #1e3a8a;
+    margin-bottom: 20px;
+  }
+
+  /* TABLE */
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+  }
+
+  thead th {
+    background: var(--primary-light);
+    padding: 14px 12px;
+    text-align: left;
+    font-size: 13px;
+    color: #1e3a8a;
+    font-weight: 600;
+  }
+
+  tbody tr {
+    background: #ffffff;
+    box-shadow: var(--shadow);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.15s ease;
+  }
+
+  tbody tr:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.12);
+  }
+
+  tbody td {
+    padding: 14px 12px;
+    font-size: 14px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+
+  /* STATUS */
+  .badge {
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: bold;
+    color: white;
+  }
+
+  .due { background: #facc15; color: black; }
+  .given { background: #22c55e; }
+
+  .view-btn {
+    background: #2563eb;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: none;
+    font-size: 13px;
+    cursor: pointer;
+  }
+
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="top-nav">
+  <div class="nav-left">
+    <div class="brand">MediDispense</div>
+
+    <a href="{{ url_for('doctor_profile', doctor_id=doctor.doctor_id) }}"
+       class="nav-link {% if request.endpoint=='doctor_profile' %}active{% endif %}">
+       Profile
+    </a>
+
+    <a href="{{ url_for('doctor_dashboard', doctor_id=doctor.doctor_id) }}"
+       class="nav-link {% if request.endpoint=='doctor_dashboard' %}active{% endif %}">
+       Dashboard
+    </a>
+
+
+    <a href="{{ url_for('doctor_history', doctor_id=doctor.doctor_id) }}"
+       class="nav-link {% if request.endpoint=='doctor_history' %}active{% endif %}">
+       History
+    </a>
+  </div>
+
+  <a class="logout" href="{{ url_for('logout') }}">Log Out</a>
+</div>
+
+<!-- PAGE CONTENT -->
+<div class="page">
+  <div class="section-card">
+    <div class="section-title">Assigned Patients</div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Patient ID</th>
+          <th>Name</th>
+          <th>Room</th>
+          <th>Diagnosis</th>
+          <th>Next Medicine Time</th>
+          <th>Status</th>
+          <th>Details</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for p in assigned_patients %}
+        <tr onclick="window.location.href='/patient/{{ p.patient_id }}'">
+          <td>{{ p.patient_id }}</td>
+          <td>{{ p.name }}</td>
+          <td>{{ p.room }}</td>
+          <td>{{ p.diagnosis }}</td>
+          <td>{{ p.next_medicine_time }}</td>
+
+          <td>
+            <span class="badge {% if p.status=='Given' %}given{% else %}due{% endif %}">
+              {{ p.status }}
+            </span>
+          </td>
+
+          <td>
+            <button class="view-btn">View Details</button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</body>
+</html>

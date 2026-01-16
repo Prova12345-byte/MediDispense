@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Medicine History | MediDispense</title>
+
+
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-light: #e0edff;
+      --primary-soft: #f3f6ff;
+      --nav-bg: linear-gradient(to right, #2563eb, #1e40af);
+      --text-main: #111827;
+      --text-muted: #6b7280;
+      --border: #e5e7eb;
+      --radius: 14px;
+      --shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    }
+
+
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background: url("{{ url_for('static', filename='images1/bg_medical.jpg') }}");
+      background-size: 350px;
+      background-repeat: repeat;
+      background-attachment: fixed;
+      color: var(--text-main);
+      overflow-x: hidden;
+    }
+
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.78);
+      z-index: -1;
+    }
+
+
+    /* TOP NAVBAR (same as other pages) */
+    .top-nav {
+      width: 100%;
+      background: var(--nav-bg);
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: var(--shadow);
+    }
+
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 35px;
+      font-size: 15px;
+      flex-wrap: nowrap;
+    }
+
+
+    .brand {
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+
+    .nav-link {
+      text-decoration: none;
+      color: #e9efff;
+      font-weight: 500;
+      transition: 0.2s;
+    }
+
+
+    .nav-link:hover,
+    .nav-link.active {
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+
+    .logout {
+      background: #ef4444;
+      color: white;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 14px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: 0.25s ease;
+      box-shadow: 0 4px 10px rgba(239, 68, 68, 0.35);
+    }
+
+
+    .logout:hover {
+      background: #dc2626;
+      transform: translateY(-1px);
+    }
+
+
+    /* PAGE LAYOUT */
+    .page {
+      padding: 40px 6%;
+    }
+
+
+    .section-card {
+      background: white;
+      padding: 26px 26px 22px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+      margin-bottom: 18px;
+    }
+
+
+    .section-title {
+      font-size: 26px;
+      font-weight: 700;
+      color: #1e3a8a;
+      margin-bottom: 4px;
+    }
+
+
+    .section-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+
+    .nurse-name {
+      font-weight: 600;
+      color: #111827;
+    }
+
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+
+    .search-input {
+      min-width: 250px;
+      padding: 9px 11px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      font-size: 14px;
+      outline: none;
+    }
+
+
+    .search-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.15);
+    }
+
+
+    .select-filter {
+      padding: 9px 11px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      font-size: 14px;
+      outline: none;
+      background: #f9fafb;
+    }
+
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 999px;
+      padding: 9px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
+      transition: 0.25s ease;
+      white-space: nowrap;
+    }
+
+
+    .btn-primary:hover {
+      background: #1e40af;
+      transform: translateY(-1px);
+    }
+
+
+    /* PATIENT GROUPS */
+    .history-container {
+      margin-top: 10px;
+    }
+
+
+    .patient-group {
+      margin-bottom: 14px;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      overflow: hidden;
+      background: #f9fafb;
+    }
+
+
+    .patient-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px;
+      background: #eff4ff;
+      cursor: pointer;
+    }
+
+
+    .patient-main {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      color: #1e3a8a;
+    }
+
+
+    .pill-pid {
+      font-size: 12px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: white;
+      border: 1px solid #d1d5db;
+      color: #4b5563;
+    }
+
+
+    .patient-sub {
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+
+    .chevron {
+      font-size: 16px;
+      transition: transform 0.2s ease;
+      color: #6b7280;
+    }
+
+
+    .chevron.open {
+      transform: rotate(90deg);
+    }
+
+
+    .patient-body {
+      background: white;
+      padding: 4px 0 10px;
+      display: none;
+    }
+
+
+    .patient-body.open {
+      display: block;
+    }
+
+
+    /* TABLE INSIDE GROUP */
+    .history-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 13px;
+    }
+
+
+    .history-table thead th {
+      text-align: left;
+      padding: 8px 14px;
+      color: #6b7280;
+      font-weight: 600;
+      border-bottom: 1px solid #e5e7eb;
+      background: #f9fafb;
+      text-transform: uppercase;
+      font-size: 11px;
+    }
+
+
+    .history-table tbody tr:nth-child(odd) {
+      background: #ffffff;
+    }
+
+
+    .history-table tbody tr:nth-child(even) {
+      background: #f9fafb;
+    }
+
+
+    .history-table td {
+      padding: 8px 14px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+
+    .status-chip {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+
+    .status-given {
+      background: #22c55e1a;
+      color: #15803d;
+      border: 1px solid #86efac;
+    }
+
+
+    .status-missed {
+      background: #fee2e2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+    }
+
+
+    .status-due {
+      background: #facc151a;
+      color: #854d0e;
+      border: 1px solid #fde68a;
+    }
+
+
+    .empty-state {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 12px;
+    }
+
+
+    .timestamp {
+      text-align: right;
+      margin-top: 12px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+
+    @media (max-width: 768px) {
+      .section-header {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+
+      .toolbar {
+        width: 100%;
+      }
+
+
+      .search-input {
+        flex: 1;
+        min-width: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+
+<!-- TOP NAV -->
+<div class="top-nav">
+  <div class="nav-left">
+    <div class="brand">MediDispense</div>
+
+
+    <a href="{{ url_for('nurse_profile', nurse_id=nurse.nurse_id) }}"
+       class="nav-link {% if request.endpoint=='nurse_profile' %}active{% endif %}">
+      Profile
+    </a>
+
+
+    <a href="{{ url_for('nurse_dashboard') }}"
+       class="nav-link {% if request.endpoint=='nurse_dashboard' %}active{% endif %}">
+      Dashboard
+    </a>
+
+
+    <a href="{{ url_for('nurse_patients') }}"
+       class="nav-link {% if request.endpoint=='nurse_patients' %}active{% endif %}">
+      My Patients
+    </a>
+
+
+    <a href="{{ url_for('nurse_history') }}"
+       class="nav-link {% if request.endpoint=='nurse_history' %}active{% endif %}">
+      History
+    </a>
+  </div>
+
+
+  <a class="logout" href="{{ url_for('logout') }}">Log Out</a>
+</div>
+
+
+<!-- PAGE -->
+<div class="page">
+  <div class="section-card">
+    <div class="section-header">
+      <div>
+        <div class="section-title">Medicine History</div>
+        <div class="section-subtitle">
+          Nurse: <span class="nurse-name">{{ nurse.name }}</span><br/>
+          Review medicine given, missed doses, and status changes for your patients.
+        </div>
+      </div>
+
+
+      <div class="toolbar">
+        <input id="history-search"
+               type="text"
+               class="search-input"
+               placeholder="Search patient, action, time..." />
+
+
+        <select id="history-status" class="select-filter">
+          <option value="all">Filter by Status</option>
+          <option value="Given">Given</option>
+          <option value="Missed">Missed</option>
+          <option value="Due">Due (Reverted)</option>
+        </select>
+
+
+        <button id="export-csv" class="btn-primary">
+          Export CSV
+        </button>
+      </div>
+    </div>
+
+
+    <div id="history-container" class="history-container">
+      <!-- Filled by JS -->
+    </div>
+
+
+    <div class="timestamp" id="history-count">
+      <!-- Filled by JS -->
+    </div>
+  </div>
+</div>
+
+
+<script>
+  // History data from backend
+  const fullHistory = {{ history_json | safe }};
+  let filteredHistory = fullHistory.slice();
+
+
+  // Render grouped by patient
+  function renderHistory(list) {
+    const container = document.getElementById("history-container");
+    const countLabel = document.getElementById("history-count");
+    container.innerHTML = "";
+
+
+    if (!list || list.length === 0) {
+      container.innerHTML = '<div class="empty-state">No history available yet.</div>';
+      countLabel.textContent = "";
+      return;
+    }
+
+
+    // Group by patient
+    const groups = {};
+    list.forEach(item => {
+      const pid = item.patient_id || "Unknown";
+      if (!groups[pid]) {
+        groups[pid] = {
+          patient_id: pid,
+          name: item.patient_name || "Unknown",
+          rows: []
+        };
+      }
+      groups[pid].rows.push(item);
+    });
+
+
+    const groupArray = Object.values(groups);
+
+
+    groupArray.forEach((g, index) => {
+      const groupId = `group-${g.patient_id}-${index}`;
+
+
+      let rowsHtml = "";
+      g.rows.forEach(r => {
+        const statusLower = (r.status || "").toLowerCase();
+        let statusClass = "status-due";
+        if (statusLower === "given") statusClass = "status-given";
+        else if (statusLower === "missed") statusClass = "status-missed";
+
+
+        rowsHtml += `
+          <tr>
+            <td>${r.dose_time || "-"}</td>
+            <td>${r.time || "-"}</td>
+            <td>${r.action || "-"}</td>
+            <td>
+              <span class="status-chip ${statusClass}">
+                ${r.status || "-"}
+              </span>
+            </td>
+          </tr>
+        `;
+      });
+
+
+      container.innerHTML += `
+        <div class="patient-group">
+          <div class="patient-header" onclick="toggleGroup('${groupId}')">
+            <div class="patient-main">
+              <span class="pill-pid">${g.patient_id}</span>
+              <span>${g.name}</span>
+              <span class="patient-sub">
+                • ${g.rows.length} record${g.rows.length > 1 ? "s" : ""}
+              </span>
+            </div>
+            <div class="chevron" id="${groupId}-chevron">&#8250;</div>
+          </div>
+          <div class="patient-body open" id="${groupId}">
+            <table class="history-table">
+              <thead>
+                <tr>
+                  <th>Dose Time</th>
+                  <th>Event Time</th>
+                  <th>Action</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rowsHtml}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    });
+
+
+    // Expand all by default
+    groupArray.forEach((g, index) => {
+      const groupId = `group-${g.patient_id}-${index}`;
+      const body = document.getElementById(groupId);
+      const chev = document.getElementById(groupId + "-chevron");
+      if (body) body.classList.add("open");
+      if (chev) chev.classList.add("open");
+    });
+
+
+    countLabel.textContent = `${list.length} record${list.length !== 1 ? "s" : ""} shown`;
+  }
+
+
+  function toggleGroup(id) {
+    const body = document.getElementById(id);
+    const chev = document.getElementById(id + "-chevron");
+    if (!body || !chev) return;
+    body.classList.toggle("open");
+    chev.classList.toggle("open");
+  }
+
+
+  function applyFilters() {
+    const term = document.getElementById("history-search").value.toLowerCase().trim();
+    const statusFilter = document.getElementById("history-status").value;
+
+
+    filteredHistory = fullHistory.filter(item => {
+      const textBlob = [
+        item.patient_id,
+        item.patient_name,
+        item.action,
+        item.status,
+        item.time,
+        item.dose_time
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+
+
+      const matchesText = term === "" || textBlob.includes(term);
+
+
+      const matchesStatus =
+        statusFilter === "all" ||
+        (item.status && item.status.toLowerCase() === statusFilter.toLowerCase());
+
+
+      return matchesText && matchesStatus;
+    });
+
+
+    renderHistory(filteredHistory);
+  }
+
+
+  function exportCSV() {
+    if (!filteredHistory || filteredHistory.length === 0) {
+      alert("No history to export.");
+      return;
+    }
+
+
+    const header = [
+      "Patient ID",
+      "Patient Name",
+      "Event Time",
+      "Dose Time",
+      "Action",
+      "Status"
+    ];
+
+
+    const rows = filteredHistory.map(r => [
+      r.patient_id || "",
+      r.patient_name || "",
+      r.time || "",
+      r.dose_time || "",
+      r.action || "",
+      r.status || ""
+    ]);
+
+
+    let csvContent = header.join(",") + "\n";
+    rows.forEach(row => {
+      const escaped = row.map(value =>
+        `"${String(value).replace(/"/g, '""')}"`
+      );
+      csvContent += escaped.join(",") + "\n";
+    });
+
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "medicine_history.csv";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+
+  // Event bindings
+  document.addEventListener("DOMContentLoaded", () => {
+    renderHistory(fullHistory);
+
+
+    document
+      .getElementById("history-search")
+      .addEventListener("input", applyFilters);
+
+
+    document
+      .getElementById("history-status")
+      .addEventListener("change", applyFilters);
+
+
+    document
+      .getElementById("export-csv")
+      .addEventListener("click", exportCSV);
+  });
+</script>
+</body>
+</html>
+
+

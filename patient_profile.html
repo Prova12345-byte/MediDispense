@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Patient Profile | MediDispense</title>
+
+
+<style>
+
+
+ 
+
+
+/* ========== GLOBAL THEME ========== */
+:root {
+    --primary: #2563eb;
+    --primary-light: #e5edff;
+    --border: #dbe1ee;
+    --text-main: #1f2937;
+    --text-muted: #6b7280;
+    --radius: 14px;
+    --shadow: 0 4px 14px rgba(0,0,0,0.08);
+    --header-line: #2563eb;
+}
+
+
+body {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    background: url("{{ url_for('static', filename='images1/bg_medical.jpg') }}");
+    background-size: 350px;
+    background-repeat: repeat;
+}
+
+
+/* White translucent overlay */
+body:before {
+    content:"";
+    position:fixed;
+    inset:0;
+    background:rgba(255,255,255,0.78);
+    z-index:-1;
+}
+
+
+/* ========== TOP NAVBAR (Matches Your Site) ========== */
+.top-nav {
+    width: 100%;
+    background: linear-gradient(to right, #2563eb, #1e40af);
+    padding: 14px 24px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+}
+
+
+.brand {
+    font-size: 22px;
+    font-weight: 700;
+}
+
+
+.nav-link {
+    text-decoration: none;
+    color: #dbeafe;
+    font-weight: 500;
+    transition: 0.2s;
+}
+.nav-link:hover,
+.nav-link.active {
+    color: #fff;
+    font-weight: 600;
+}
+
+
+.logout {
+    background: #ef4444;
+    padding: 7px 14px;
+    border-radius: 6px;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    box-shadow: 0 3px 10px rgba(239,68,68,0.35);
+}
+.logout:hover {
+    background:#dc2626;
+}
+
+
+
+
+/* ========== PAGE LAYOUT ========== */
+.page {
+    padding: 30px 6%;
+}
+
+
+/* Section title */
+.page-title {
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 4px;
+}
+
+
+/* Subtitle */
+.subtitle {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+
+/* Back & Export buttons */
+.action-bar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+
+.btn-back-modern {
+    background: #ffffff;
+    border: 2px solid #2563eb;
+    padding: 8px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    color: #2563eb;
+    cursor: pointer;
+    transition: 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+
+.btn-back-modern:hover {
+    background: #2563eb;
+    color: white;
+    transform: translateY(-1px);
+}
+
+
+
+
+.btn-export {
+    padding: 6px 14px;
+    background: #22c55e;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+
+/* ========== CARDS ========== */
+.card {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 18px 22px 22px;
+    border: 1px solid var(--border);
+}
+
+
+/* Header line */
+.card-header {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid var(--primary);
+}
+
+
+/* Avatar */
+.avatar {
+    width: 78px;
+    height: 78px;
+    border-radius: 50%;
+    background: var(--primary);
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size: 32px;
+    font-weight:600;
+}
+
+
+/* Grid layout for clean professional EMR design */
+.grid-3 {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+
+.grid-1 {
+    margin-top: 24px;
+}
+
+
+.info-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 2px;
+}
+
+
+.info-value {
+    font-size: 15px;
+    color: var(--text-main);
+    font-weight: 500;
+}
+
+
+/* lists */
+ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+
+.note-box {
+    font-size: 14px;
+    color: var(--text-main);
+}
+/* Add vertical spacing between card rows */
+.row-spacing {
+    margin-bottom: 32px;  /* You can increase or decrease spacing here */
+}
+
+
+
+
+</style>
+</head>
+
+
+
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+<div class="top-nav">
+    <div class="nav-left">
+        <div class="brand">MediDispense</div>
+
+
+        <a href="{{ url_for('nurse_profile', nurse_id=nurse.nurse_id) }}" class="nav-link">Profile</a>
+        <a href="{{ url_for('nurse_dashboard') }}" class="nav-link">Dashboard</a>
+        <a href="{{ url_for('nurse_patients') }}" class="nav-link active">My Patients</a>
+        <a href="{{ url_for('nurse_history') }}" class="nav-link">History</a>
+    </div>
+
+
+    <a href="{{ url_for('logout') }}" class="logout">Log Out</a>
+</div>
+
+
+
+
+<!-- ================= PAGE CONTENT ================= -->
+<div class="page">
+
+
+    <div class="page-title">Patient Profile</div>
+    <div class="subtitle">Electronic Medical Record • Detailed View</div>
+
+
+    <div class="action-bar">
+        <button class="btn-back-modern" onclick="window.history.back()">← Back to Patients</button>
+
+
+        <button class="btn-export" onclick="exportPDF()">Export Summary</button>
+
+
+    </div>
+
+
+
+
+    <!-- ================= FIRST ROW ================= -->
+    <div class="grid-3">
+
+
+        <!-- PATIENT SUMMARY -->
+        <div class="card">
+            <div class="card-header">👤 Patient Summary</div>
+
+
+            <div style="display:flex; gap:18px; align-items:center;">
+                <div class="avatar">{{ patient.name[0] }}</div>
+
+
+                <div>
+                    <div class="info-value" style="font-size:18px; font-weight:700;">
+                        {{ patient.name }}
+                    </div>
+                    <div class="info-label">
+                        {{ patient.age }} yrs • {{ patient.gender }} • Room {{ patient.room }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <!-- CLINICAL OVERVIEW -->
+        <div class="card">
+            <div class="card-header">📋 Clinical Overview</div>
+
+
+            <div class="info-label">Condition</div>
+            <div class="info-value">{{ patient.condition }}</div>
+
+
+            <div class="info-label" style="margin-top:8px;">Primary Diagnosis</div>
+            <div class="info-value">{{ patient.diagnosis }}</div>
+
+
+            <div class="info-label" style="margin-top:8px;">Consultant</div>
+            <div class="info-value">{{ patient.doctor }}</div>
+        </div>
+
+
+
+
+        <!-- VITALS -->
+        <div class="card">
+            <div class="card-header">💗 Vitals</div>
+
+
+            <div class="info-label">Blood Pressure</div>
+            <div class="info-value">{{ patient.vitals.bp }}</div>
+
+
+            <div class="info-label" style="margin-top:8px;">Heart Rate</div>
+            <div class="info-value">{{ patient.vitals.hr }} bpm</div>
+
+
+            <div class="info-label" style="margin-top:8px;">Temperature</div>
+            <div class="info-value">{{ patient.vitals.temp }}°F</div>
+        </div>
+
+
+    </div> <!-- end row 1 -->
+
+
+
+
+
+
+    <!-- ================= SECOND ROW ================= -->
+    <div class="grid-2 row-spacing">
+
+
+
+
+        <!-- MEDICATION SCHEDULE -->
+        <div class="card">
+            <div class="card-header">⏱ Medication Schedule</div>
+
+
+            <div class="info-label">Next Dose</div>
+            <div class="info-value">{{ patient.next_medicine_time }}</div>
+
+
+            <div class="info-label" style="margin-top:8px;">Status</div>
+            <div class="info-value">{{ patient.status }}</div>
+        </div>
+
+
+
+
+        <!-- CURRENT MEDICATIONS -->
+        <div class="card">
+            <div class="card-header">💊 Current Medications</div>
+            <ul>
+                {% for med in patient.current_medications %}
+                <li>{{ med }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+
+    </div> <!-- end row 2 -->
+
+
+
+
+
+
+    <!-- ================= THIRD ROW ================= -->
+    <div class="grid-2 row-spacing">
+
+
+
+
+        <!-- TREATMENTS -->
+        <div class="card">
+            <div class="card-header">🩺 Ongoing Treatments</div>
+            <ul>
+                {% for t in patient.treatments %}
+                <li>{{ t }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+
+
+
+        <!-- ALLERGIES -->
+        <div class="card">
+            <div class="card-header">⚠ Allergies</div>
+            <ul>
+                {% for a in patient.allergies %}
+                <li>{{ a }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+
+    </div> <!-- end row 3 -->
+
+
+
+
+    <!-- ================= NOTES ================= -->
+    <div class="grid-1">
+        <div class="card">
+            <div class="card-header">📝 Clinical Notes</div>
+            <div class="note-box">{{ patient.notes }}</div>
+        </div>
+    </div>
+
+
+</div> <!-- end page -->
+
+
+
+
+<script>
+function exportPDF() {
+    window.location.href = "/export_pdf/{{ patient.patient_id }}";
+}
+</script>
+
+
+
+
+</body>
+</html>
+
+

@@ -1,0 +1,134 @@
+{
+  "doctors": {
+    "D001": {
+      "doctor_id": "D001",
+      "doctor_name": "Dr. Imran Hossain",
+      "specialization": "Pulmonologist",
+      "shift": "Day"
+    },
+    "D002": {
+      "doctor_id": "D002",
+      "doctor_name": "Dr. Nusrat Jahan",
+      "specialization": "Endocrinologist",
+      "shift": "Night"
+    },
+    "D003": {
+      "doctor_id": "D003",
+      "doctor_name": "Dr. Farhana Akter",
+      "specialization": "Cardiologist",
+      "shift": "Day"
+    },
+    "D004": {
+      "doctor_id": "D004",
+      "doctor_name": "Dr. Rezaul Karim",
+      "specialization": "Neurologist",
+      "shift": "Evening"
+    },
+    "D005": {
+      "doctor_id": "D005",
+      "doctor_name": "Dr. Shaila Anwar",
+      "specialization": "Pulmonologist",
+      "shift": "Night"
+    }
+  },
+  "nurses": {
+    "N001": {
+      "nurse_id": "N001",
+      "nurse_name": "Nusrat Islam",
+      "assigned_rooms": ["R101", "R102"],
+      "assigned_patients": ["P001", "P002"],
+      "shift": "Day"
+    },
+    "N002": {
+      "nurse_id": "N002",
+      "nurse_name": "Tanvir Alam",
+      "assigned_rooms": ["R103", "R104"],
+      "assigned_patients": ["P003", "P004", "P005"],
+      "shift": "Night"
+    }
+  },
+  "patients": {
+    "P001": {
+      "patient_id": "P001",
+      "room_id": "R101",
+      "bed_id": "B101",
+      "patient_name": "Ayesha Rahman",
+      "patient_age": 29,
+      "admission_date": "2025-11-02",
+      "doctor_id": "D001",
+      "nurse_id": "N001",
+      "diagnosis": "Pneumonia",
+      "medicines": ["Amoxicillin", "Paracetamol", "Cough Syrup"],
+      "medicine_time": {
+        "morning": "08:00 AM",
+        "afternoon": "02:00 PM",
+        "night": "08:00 PM"
+      }
+    },
+    "P002": {
+      "patient_id": "P002",
+      "room_id": "R101",
+      "bed_id": "B102",
+      "patient_name": "Rafiq Ahmed",
+      "patient_age": 45,
+      "admission_date": "2025-11-01",
+      "doctor_id": "D002",
+      "nurse_id": "N001",
+      "diagnosis": "Type 2 Diabetes",
+      "medicines": ["Metformin", "Insulin"],
+      "medicine_time": {
+        "morning": "07:30 AM",
+        "afternoon": "01:30 PM",
+        "night": "07:30 PM"
+      }
+    },
+    "P003": {
+      "patient_id": "P003",
+      "room_id": "R103",
+      "bed_id": "B103",
+      "patient_name": "Mahmudul Karim",
+      "patient_age": 60,
+      "admission_date": "2025-10-30",
+      "doctor_id": "D003",
+      "nurse_id": "N002",
+      "diagnosis": "Hypertension",
+      "medicines": ["Amlodipine", "Aspirin"],
+      "medicine_time": {
+        "morning": "08:00 AM",
+        "night": "08:00 PM"
+      }
+    },
+    "P004": {
+      "patient_id": "P004",
+      "room_id": "R104",
+      "bed_id": "B104",
+      "patient_name": "Sara Islam",
+      "patient_age": 34,
+      "admission_date": "2025-11-03",
+      "doctor_id": "D004",
+      "nurse_id": "N002",
+      "diagnosis": "Migraine",
+      "medicines": ["Sumatriptan", "Ibuprofen"],
+      "medicine_time": {
+        "morning": "09:00 AM",
+        "night": "09:00 PM"
+      }
+    },
+    "P005": {
+      "patient_id": "P005",
+      "room_id": "R104",
+      "bed_id": "B105",
+      "patient_name": "Tanmoy Das",
+      "patient_age": 51,
+      "admission_date": "2025-11-05",
+      "doctor_id": "D005",
+      "nurse_id": "N002",
+      "diagnosis": "Asthma",
+      "medicines": ["Salbutamol Inhaler", "Montelukast"],
+      "medicine_time": {
+        "morning": "07:00 AM",
+        "night": "07:00 PM"
+      }
+    }
+  }
+}

@@ -1,0 +1,238 @@
+{
+  "patients": {
+    "patient_001": {
+      "01_name": "Alisha Rahman",
+      "02_age": 65,
+      "03_bed_id": "B12",
+      "04_patient_id": "251910",
+      "05_doctor_id": "251990",
+      "06_doctor_name": "Dr. Hasan",
+      "07_nurse_id": "251991",
+      "08_nurse_name": "Nurse Farhana",
+      "09_medicines": {
+        "med_001": {
+          "01_name": "Metformin",
+          "02_dose": "500mg",
+          "03_time": "09:00 AM",
+          "04_status": "Pending"
+        },
+        "med_002": {
+          "01_name": "Vitamin D",
+          "02_dose": "2000IU",
+          "03_time": "09:00 AM",
+          "04_status": "Pending"
+        }
+      }
+    },
+    "patient_002": {
+      "01_name": "Rahim Khan",
+      "02_age": 72,
+      "03_bed_id": "B15",
+      "04_patient_id": "251911",
+      "05_doctor_id": "251992",
+      "06_doctor_name": "Dr. Kamal",
+      "07_nurse_id": "251993",
+      "08_nurse_name": "Nurse Sumaiya",
+      "09_medicines": {
+        "med_001": {
+          "01_name": "Aspirin",
+          "02_dose": "100mg",
+          "03_time": "08:00 AM",
+          "04_status": "Pending"
+        }
+      }
+    },
+    "patient_003": {
+      "01_name": "Fatima Noor",
+      "02_age": 58,
+      "03_bed_id": "B18",
+      "04_patient_id": "251912",
+      "05_doctor_id": "251994",
+      "06_doctor_name": "Dr. Rafiq",
+      "07_nurse_id": "251995",
+      "08_nurse_name": "Nurse Shaila",
+      "09_medicines": {
+        "med_001": {
+          "01_name": "Insulin",
+          "02_dose": "20 units",
+          "03_time": "07:30 AM",
+          "04_status": "Pending"
+        },
+        "med_002": {
+          "01_name": "Calcium",
+          "02_dose": "500mg",
+          "03_time": "08:00 PM",
+          "04_status": "Pending"
+        }
+      }
+    },
+    "patient_004": {
+      "01_name": "Imran Hossain",
+      "02_age": 60,
+      "03_bed_id": "B20",
+      "04_patient_id": "251913",
+      "05_doctor_id": "251996",
+      "06_doctor_name": "Dr. Laila",
+      "07_nurse_id": "251997",
+      "08_nurse_name": "Nurse Ayesha",
+      "09_medicines": {
+        "med_001": {
+          "01_name": "Metoprolol",
+          "02_dose": "50mg",
+          "03_time": "09:00 AM",
+          "04_status": "Pending"
+        },
+        "med_002": {
+          "01_name": "Omeprazole",
+          "02_dose": "20mg",
+          "03_time": "08:00 PM",
+          "04_status": "Pending"
+        }
+      }
+    },
+    "patient_005": {
+      "01_name": "Sadia Akter",
+      "02_age": 55,
+      "03_bed_id": "B22",
+      "04_patient_id": "251914",
+      "05_doctor_id": "251998",
+      "06_doctor_name": "Dr. Tarek",
+      "07_nurse_id": "251999",
+      "08_nurse_name": "Nurse Ruma",
+      "09_medicines": {
+        "med_001": {
+          "01_name": "Atorvastatin",
+          "02_dose": "10mg",
+          "03_time": "08:00 AM",
+          "04_status": "Pending"
+        },
+        "med_002": {
+          "01_name": "Folic Acid",
+          "02_dose": "400mcg",
+          "03_time": "09:00 PM",
+          "04_status": "Pending"
+        }
+      }
+    },
+    "patient_006": {
+      "01_name": "Jamal Uddin",
+      "02_age": 68,
+      "03_bed_id": "B25",
+      "04_patient_id": "251915",
+      "05_doctor_id": "252000",
+      "06_doctor_name": "Dr. Selim",
+      "07_nurse_id": "252001",
+      "08_nurse_name": "Nurse Nadia",
+      "09_medicines": {
+        "med_001": {
+          "01_name": "Losartan",
+          "02_dose": "50mg",
+          "03_time": "07:00 AM",
+          "04_status": "Pending"
+        },
+        "med_002": {
+          "01_name": "Vitamin C",
+          "02_dose": "500mg",
+          "03_time": "08:00 PM",
+          "04_status": "Pending"
+        }
+      }
+    },
+    "patient_007": {
+      "01_name": "Rumana Begum",
+      "02_age": 62,
+      "03_bed_id": "B28",
+      "04_patient_id": "251916",
+      "05_doctor_id": "252002",
+      "06_doctor_name": "Dr. Nabil",
+      "07_nurse_id": "252003",
+      "08_nurse_name": "Nurse Lamiya",
+      "09_medicines": {
+        "med_001": {
+          "01_name": "Amlodipine",
+          "02_dose": "5mg",
+          "03_time": "08:00 AM",
+          "04_status": "Pending"
+        },
+        "med_002": {
+          "01_name": "Zinc",
+          "02_dose": "20mg",
+          "03_time": "09:00 PM",
+          "04_status": "Pending"
+        }
+      }
+    },
+    "patient_008": {
+      "01_name": "Karim Ahmed",
+      "02_age": 70,
+      "03_bed_id": "B30",
+      "04_patient_id": "251917",
+      "05_doctor_id": "252004",
+      "06_doctor_name": "Dr. Shirin",
+      "07_nurse_id": "252005",
+      "08_nurse_name": "Nurse Tasnim",
+      "09_medicines": {
+        "med_001": {
+          "01_name": "Warfarin",
+          "02_dose": "5mg",
+          "03_time": "07:30 AM",
+          "04_status": "Pending"
+        },
+        "med_002": {
+          "01_name": "Vitamin B12",
+          "02_dose": "1000mcg",
+          "03_time": "08:00 PM",
+          "04_status": "Pending"
+        }
+      }
+    },
+    "patient_009": {
+      "01_name": "Sohana Parvin",
+      "02_age": 59,
+      "03_bed_id": "B32",
+      "04_patient_id": "251918",
+      "05_doctor_id": "252006",
+      "06_doctor_name": "Dr. Amin",
+      "07_nurse_id": "252007",
+      "08_nurse_name": "Nurse Laila",
+      "09_medicines": {
+        "med_001": {
+          "01_name": "Levothyroxine",
+          "02_dose": "50mcg",
+          "03_time": "07:00 AM",
+          "04_status": "Pending"
+        },
+        "med_002": {
+          "01_name": "Vitamin D3",
+          "02_dose": "1000IU",
+          "03_time": "09:00 PM",
+          "04_status": "Pending"
+        }
+      }
+    },
+    "patient_010": {
+      "01_name": "Fahim Chowdhury",
+      "02_age": 66,
+      "03_bed_id": "B35",
+      "04_patient_id": "251919",
+      "05_doctor_id": "252008",
+      "06_doctor_name": "Dr. Hossain",
+      "07_nurse_id": "252009",
+      "08_nurse_name": "Nurse Rina",
+      "09_medicines": {
+        "med_001": {
+          "01_name": "Simvastatin",
+          "02_dose": "20mg",
+          "03_time": "08:00 AM",
+          "04_status": "Pending"
+        },
+        "med_002": {
+          "01_name": "Vitamin E",
+          "02_dose": "400IU",
+          "03_time": "09:00 PM",
+          "04_status": "Pending"
+        }
+      }
+    }
+  }
+}
